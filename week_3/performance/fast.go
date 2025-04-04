@@ -161,7 +161,6 @@ func FastSearch(out io.Writer) {
 	scanner := bufio.NewScanner(f)
 	user := &User{}
 
-	// fmt.Fprintln(out, "found users:")
 	out.Write([]byte("found users:\n"))
 
 	for scanner.Scan() {
@@ -205,11 +204,10 @@ func FastSearch(out io.Writer) {
 
 		formatedUser := fmt.Sprintf("[%d] %s <%s>\n", index, user.Name, email)
 
-		// fmt.Fprint(out, formatedUser)
 		out.Write([]byte(formatedUser))
 		index += 1
 	}
-	fmt.Fprintln(out, "")
+	out.Write([]byte("\n"))
 
 	fmt.Fprintln(out, "Total unique browsers", len(seenBrowsers))
 }
