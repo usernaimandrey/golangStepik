@@ -2,11 +2,13 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
 	"os"
 	"slices"
+	"strconv"
 	"strings"
 
 	easyjson "github.com/mailru/easyjson"
@@ -200,14 +202,35 @@ func FastSearch(out io.Writer) {
 			continue
 		}
 
+		buf := bytes.Buffer{}
+
 		email := strings.Replace(user.Email, "@", " [at] ", -1)
 
-		formatedUser := fmt.Sprintf("[%d] %s <%s>\n", index, user.Name, email)
+		// formatedUser := fmt.Sprintf("[%d] %s <%s>\n", index, user.Name, email)
 
-		out.Write([]byte(formatedUser))
+		// out.Write([]byte(formatedUser))
+
+		buf.WriteByte('[')
+		buf.WriteString(strconv.Itoa(index))
+		buf.WriteByte(']')
+		buf.WriteByte(' ')
+		buf.WriteString(user.Name)
+		buf.WriteByte(' ')
+		buf.WriteByte('<')
+		buf.WriteString(email)
+		buf.WriteByte('>')
+		buf.WriteByte('\n')
+		out.Write(buf.Bytes())
 		index += 1
 	}
 	out.Write([]byte("\n"))
 
 	fmt.Fprintln(out, "Total unique browsers", len(seenBrowsers))
+}
+
+func main() {
+	fastOut := new(bytes.Buffer)
+	FastSearch(fastOut)
+	fastResult := fastOut.String()
+	fmt.Println(fastResult)
 }
