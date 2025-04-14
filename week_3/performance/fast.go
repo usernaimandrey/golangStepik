@@ -162,6 +162,7 @@ func FastSearch(out io.Writer) {
 	index := 0
 	scanner := bufio.NewScanner(f)
 	user := &User{}
+	formatedEmail := ""
 
 	out.Write([]byte("found users:\n"))
 
@@ -204,7 +205,7 @@ func FastSearch(out io.Writer) {
 
 		buf := bytes.Buffer{}
 
-		email := strings.Replace(user.Email, "@", " [at] ", -1)
+		formatedEmail = strings.Replace(user.Email, "@", " [at] ", -1)
 
 		// formatedUser := fmt.Sprintf("[%d] %s <%s>\n", index, user.Name, email)
 
@@ -217,7 +218,7 @@ func FastSearch(out io.Writer) {
 		buf.WriteString(user.Name)
 		buf.WriteByte(' ')
 		buf.WriteByte('<')
-		buf.WriteString(email)
+		buf.WriteString(formatedEmail)
 		buf.WriteByte('>')
 		buf.WriteByte('\n')
 		out.Write(buf.Bytes())
